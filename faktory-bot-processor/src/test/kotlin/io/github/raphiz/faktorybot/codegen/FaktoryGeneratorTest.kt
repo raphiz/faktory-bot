@@ -9,7 +9,7 @@ import kotlin.reflect.full.primaryConstructor
 
 class FaktoryGeneratorTest {
     @Test
-    fun `it generates a data class with all properties and invoke method`() {
+    fun `it generates a data class with all properties and methods`() {
         val model = modelOf<User>()
 
         val result = FaktoryGenerator().generate(model)
@@ -28,6 +28,11 @@ class FaktoryGeneratorTest {
                 public val age: () -> Int? = { null },
             ) {
                 public operator fun invoke(name: String = this.name(), age: Int? = this.age()): User =
+                    User(
+                        name = name,
+                        age = age,
+                    )
+                public fun create(name: String = this.name(), age: Int? = this.age()): User =
                     User(
                         name = name,
                         age = age,

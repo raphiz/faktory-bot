@@ -15,15 +15,10 @@ class FaktoryGenerator {
         return TypeSpec.classBuilder(
             className = ClassName(type.packageName, faktoryName),
         ).addModifiers(KModifier.DATA)
-            .primaryConstructor(
-                toConstructorFunSpec()
-            )
-            .addProperties(
-                toPropertySpecs()
-            )
-            .addFunction(
-                invokeFunSpec()
-            )
+            .primaryConstructor(toConstructorFunSpec())
+            .addProperties(toPropertySpecs())
+            .addFunction(invokeFunSpec())
+            .addFunction(createFunSpec())
             .build()
     }
 
@@ -49,30 +44,37 @@ class FaktoryGenerator {
     }
 
     private fun Model.invokeFunSpec(): FunSpec {
-        return FunSpec.builder("invoke")
+        return builderFunSpec("invoke")
             .addModifiers(KModifier.OPERATOR)
-            .addParameters(
-                attributes.map {
-                    ParameterSpec.builder(
-                        it.name, it.type
-                    ).defaultValue("this.%N()", it.name)
-                        .build()
-                }
-            )
-            .addCode(
-                CodeBlock.builder()
-                    .add("return %T(", type)
-                    .apply {
-                        attributes.forEach {
-                            add("%N=%N,", it.name, it.name)
-                        }
-                    }
-                    .add(")", type)
-                    .build()
-            )
-            .returns(this.type)
             .build()
     }
+
+    private fun Model.createFunSpec(): FunSpec {
+        return builderFunSpec("create")
+            .build()
+    }
+
+    private fun Model.builderFunSpec(name: String) = FunSpec.builder(name)
+        .addParameters(
+            attributes.map {
+                ParameterSpec.builder(
+                    it.name, it.type
+                ).defaultValue("this.%N()", it.name)
+                    .build()
+            }
+        )
+        .addCode(
+            CodeBlock.builder()
+                .add("return %T(", type)
+                .apply {
+                    attributes.forEach {
+                        add("%N=%N,", it.name, it.name)
+                    }
+                }
+                .add(")", type)
+                .build()
+        )
+        .returns(this.type)
 }
 
 private val Model.faktoryName: String
