@@ -39,11 +39,11 @@ class FaktoryBotProcessorTest {
         assertThat(compilation.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
 
         assertThat(compilation.messages).contains(
-            "Creating Faktory for com.example.User"
+            "Creating Faktory Spec for com.example.User"
         )
 
         assertDoesNotThrow {
-            val loadClass = compilation.classLoader.loadClass("com.example.UserFaktory")
+            val loadClass = compilation.classLoader.loadClass("com.example.UserSpec")
             assertThat(loadClass.kotlin.primaryConstructor!!.parameters).hasSize(2)
         }
 

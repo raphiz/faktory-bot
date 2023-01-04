@@ -3,7 +3,7 @@ package io.github.raphiz.faktorybot.example
 import java.util.*
 
 object Addresses {
-    val validAddress = AddressFaktory(
+    val validAddress = AddressSpec(
         street = { "Sesame Street" },
         city = { "Manhattan" }
     )
@@ -11,7 +11,7 @@ object Addresses {
 }
 
 class UserFactory(userRepository: UserRepository) {
-    val validUser = UserFaktory(
+    val validUser = UserSpec(
         faktoryInsertFn = userRepository::save,
         id = { UUID.randomUUID() },
         name = { "Peter" }

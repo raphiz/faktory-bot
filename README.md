@@ -7,7 +7,7 @@ You can use it to define your own Factories/Generators and override this logic d
 
 ```kotlin
 object UserFactory{
-    val validUser = UserFaktory(
+    val validUser = UserSpec(
         id = { UUID.randomUUID() },
         name = { "Peter" }
     )
@@ -15,7 +15,6 @@ object UserFactory{
     val userWithAddress = validUser.copy(
         address = { Addresses.validAddress() }
     )
-
 }
 
 // in your tests
@@ -74,7 +73,7 @@ data class User(val id: UUID, val name: String, val address: Address?)
 `faktory-bot` will now generate the following code for you:
 
 ```kotlin
-public data class UserFaktory(
+public data class UserSpec(
     public val id: () -> UUID,
     public val name: () -> String,
     public val address: () -> Address? = { null },
@@ -99,7 +98,7 @@ The two generated methods, `create` and `invoke` do exactly the same. The latter
 Using this Faktroy, you can now simply create your own data factories
 
 ```kotlin
-val validUser = UserFaktory(
+val validUser = UserSpec(
     id = { UUID.randomUUID() },
     name = { "Peter" }
 )
@@ -138,7 +137,7 @@ This will add a parameter to the generated Faktroy: A function used for persiste
 class UserRepositoryTest {
 
     private val userRepository = UserRepository()
-    private val validUser = UserFaktory(
+    private val validUser = UserSpec(
         faktoryInsertFn = userRepository::save,
         id = { UUID.randomUUID() },
         name = { "Peter" }

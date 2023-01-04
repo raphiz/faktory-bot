@@ -4,11 +4,11 @@ import com.squareup.kotlinpoet.*
 
 const val faktoryInsertFn: String = "faktoryInsertFn"
 
-class FaktoryGenerator(
+class SpecGenerator(
     private val model: Model,
     private val withInsert: Boolean = false
 ) {
-    private val faktoryClassName = "${model.type.simpleName}Faktory"
+    private val specClassName = "${model.type.simpleName}Spec"
     private val packageName = model.type.packageName
     private val faktoryInsertFnType = LambdaTypeName.get(
         parameters = listOf(
@@ -18,14 +18,14 @@ class FaktoryGenerator(
 
     fun fileSpec(): FileSpec = FileSpec.builder(
         packageName = packageName,
-        fileName = faktoryClassName
+        fileName = specClassName
     )
-        .addType(faktoryType())
+        .addType(specType())
         .build()
 
-    private fun faktoryType(): TypeSpec {
+    private fun specType(): TypeSpec {
         val builder = TypeSpec
-            .classBuilder(ClassName(packageName, faktoryClassName))
+            .classBuilder(ClassName(packageName, specClassName))
             .addModifiers(KModifier.DATA)
             .primaryConstructor(constructor())
             .addProperties(properties())

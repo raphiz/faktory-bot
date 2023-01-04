@@ -15,7 +15,7 @@ import com.squareup.kotlinpoet.ksp.toTypeName
 import com.squareup.kotlinpoet.ksp.writeTo
 import io.github.raphiz.faktorybot.Faktory
 import io.github.raphiz.faktorybot.codegen.Attribute
-import io.github.raphiz.faktorybot.codegen.FaktoryGenerator
+import io.github.raphiz.faktorybot.codegen.SpecGenerator
 import io.github.raphiz.faktorybot.codegen.Model
 
 
@@ -32,7 +32,7 @@ class FaktoryBotProcessor(
         symbols
             .filter { it.validate() }
             .forEach {
-                logger.info("Creating Faktory for ${it.toClassName()}")
+                logger.info("Creating Faktory Spec for ${it.toClassName()}")
                 it.accept(FaktoryAnnotatedProcessorVisitor(), Unit)
             }
 
@@ -43,7 +43,7 @@ class FaktoryBotProcessor(
         override fun visitClassDeclaration(classDeclaration: KSClassDeclaration, data: Unit) {
             val faktoryAnnotation = classDeclaration.faktoryAnnotation()
             val model = classDeclaration.toModel()
-            FaktoryGenerator(model, withInsert = faktoryAnnotation.withInsert).fileSpec().writeTo(
+            SpecGenerator(model, withInsert = faktoryAnnotation.withInsert).fileSpec().writeTo(
                 codeGenerator = codeGenerator,
                 aggregating = false
             )

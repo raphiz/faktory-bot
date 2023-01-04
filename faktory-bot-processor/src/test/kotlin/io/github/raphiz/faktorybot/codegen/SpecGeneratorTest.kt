@@ -7,14 +7,14 @@ import org.junit.jupiter.api.Test
 import kotlin.reflect.KClass
 import kotlin.reflect.full.primaryConstructor
 
-class FaktoryGeneratorTest {
+class SpecGeneratorTest {
     @Test
     fun `it generates a data class with all properties and methods`() {
         val model = modelOf<User>()
 
-        val result = FaktoryGenerator(model).fileSpec()
+        val result = SpecGenerator(model).fileSpec()
 
-        assertThat(result.name).isEqualTo("UserFaktory")
+        assertThat(result.name).isEqualTo("UserSpec")
         assertThat(result.packageName).isEqualTo("com.example")
         assertThat(result.toString()).isEqualToIgnoringWhitespace(
             """
@@ -23,7 +23,7 @@ class FaktoryGeneratorTest {
             import kotlin.Int
             import kotlin.String
             
-            public data class UserFaktory(
+            public data class UserSpec(
                 public val name: () -> String,
                 public val age: () -> Int? = { null },
             ) {
@@ -43,10 +43,10 @@ class FaktoryGeneratorTest {
     }
 
     @Test
-    fun `it generates an insert method on the faktory when FaktoryInsert is supplied`() {
+    fun `it generates an insert method on the faktory when withInsert=true`() {
         val model = modelOf<User>()
 
-        val result = FaktoryGenerator(model, withInsert = true).fileSpec()
+        val result = SpecGenerator(model, withInsert = true).fileSpec()
 
         assertThat(result.toString()).containsIgnoringWhitespaces(
             """
