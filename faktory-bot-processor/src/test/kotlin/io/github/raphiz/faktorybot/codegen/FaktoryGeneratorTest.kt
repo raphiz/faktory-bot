@@ -41,6 +41,31 @@ class FaktoryGeneratorTest {
             """.trimIndent()
         )
     }
+
+    @Test
+    fun `it generates an insert method on the faktory when FaktoryInsert is supplied`() {
+        val model = modelOf<User>()
+
+        val result = FaktoryGenerator(withInsert = true).generate(model)
+
+        assertThat(result.toString()).containsIgnoringWhitespaces(
+            """
+                private val faktoryInsertFn: (User) -> User,
+            """.trimIndent()
+        )
+        assertThat(result.toString()).containsIgnoringWhitespaces(
+            """
+                public fun insert(name: String = this.name(), age: Int? = this.age()): User {
+                    val user = User(
+                        name = name,
+                        age = age,
+                    )
+                    faktoryInsertFn(user)
+                    return user
+                }
+            """.trimIndent()
+        )
+    }
 }
 
 inline fun <reified T> modelOf(): Model {
