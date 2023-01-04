@@ -23,12 +23,12 @@ class FaktoryGeneratorTest {
             import kotlin.String
             
             public data class UserFaktory(
-                public val name: String,
-                public val age: Int? = null,
+                public val name: () -> String,
+                public val age: () -> Int? = { null },
             ) {
-                public operator fun invoke(name: String? = this.name, age: Int? = this.age): User =
+                public operator fun invoke(name: String = this.name(), age: Int? = this.age()): User =
                     User(
-                        name = name!!,
+                        name = name,
                         age = age,
                     )
             }

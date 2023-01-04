@@ -32,9 +32,9 @@ class FaktoryGenerator {
         return FunSpec.constructorBuilder()
             .addParameters(
                 attributes.map {
-                    ParameterSpec.builder(it.name, it.type)
+                    ParameterSpec.builder(it.name, LambdaTypeName.get(returnType = it.type))
                         .apply {
-                            if (it.type.isNullable) defaultValue("null")
+                            if (it.type.isNullable) defaultValue("{ null }")
                         }
                         .build()
                 }
@@ -43,7 +43,7 @@ class FaktoryGenerator {
 
     private fun Model.toPropertySpecs(): List<PropertySpec> {
         return attributes.map {
-            PropertySpec.builder(it.name, it.type)
+            PropertySpec.builder(it.name, LambdaTypeName.get(returnType = it.type))
                 .initializer(it.name)
                 .build()
         }
@@ -55,10 +55,8 @@ class FaktoryGenerator {
             .addParameters(
                 attributes.map {
                     ParameterSpec.builder(
-                        it.name,
-                        // All params are optional
-                        it.type.copy(nullable = true)
-                    ).defaultValue("this.%N", it.name)
+                        it.name, it.type
+                    ).defaultValue("this.%N()", it.name)
                         .build()
                 }
             )
@@ -67,11 +65,7 @@ class FaktoryGenerator {
                     .add("return %T(", type)
                     .apply {
                         attributes.forEach {
-                            if (it.type.isNullable) {
-                                add("%N=%N,", it.name, it.name)
-                            } else {
-                                add("%N=%N!!,", it.name, it.name)
-                            }
+                            add("%N=%N,", it.name, it.name)
                         }
                     }
                     .add(")", type)
