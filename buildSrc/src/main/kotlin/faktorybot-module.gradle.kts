@@ -1,5 +1,3 @@
-import gradle.kotlin.dsl.accessors._2b712f8a17e9c189211b18b2eb58b691.test
-
 plugins {
     id("faktorybot-kotlin")
     id("com.palantir.git-version")

@@ -1,6 +1,9 @@
 plugins {
     `faktorybot-module`
+    `faktorybot-releasable-artifact`
 }
+
+description = "Generate factories to cleanly create and maintain test data"
 
 dependencies {
     implementation("com.squareup:kotlinpoet:1.12.0")
