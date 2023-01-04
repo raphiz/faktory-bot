@@ -6,7 +6,7 @@ import com.squareup.kotlinpoet.*
 class FaktoryGenerator {
     fun generate(model: Model): FileSpec {
         return FileSpec.builder(
-            packageName = model.packageName,
+            packageName = model.type.packageName,
             fileName = model.faktoryName
         ).addType(model.toTypeSpec())
             .build()
@@ -14,7 +14,7 @@ class FaktoryGenerator {
 
     private fun Model.toTypeSpec(): TypeSpec {
         return TypeSpec.classBuilder(
-            className = ClassName(packageName, faktoryName),
+            className = ClassName(type.packageName, faktoryName),
         ).addModifiers(KModifier.DATA)
             .primaryConstructor(
                 toConstructorFunSpec()
@@ -64,7 +64,7 @@ class FaktoryGenerator {
             )
             .addCode(
                 CodeBlock.builder()
-                    .add("return %T(", clazz)
+                    .add("return %T(", type)
                     .apply {
                         attributes.forEach {
                             if (it.type.isNullable) {
@@ -74,13 +74,13 @@ class FaktoryGenerator {
                             }
                         }
                     }
-                    .add(")", clazz)
+                    .add(")", type)
                     .build()
             )
-            .returns(this.clazz)
+            .returns(this.type)
             .build()
     }
 }
 
 private val Model.faktoryName: String
-    get() = "${name}Faktory"
+    get() = "${type.simpleName}Faktory"

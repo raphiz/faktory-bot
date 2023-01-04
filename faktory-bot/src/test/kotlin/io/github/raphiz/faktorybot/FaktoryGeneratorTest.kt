@@ -1,30 +1,21 @@
 package io.github.raphiz.faktorybot
 
-import com.squareup.kotlinpoet.ClassName.Companion.bestGuess
 import com.squareup.kotlinpoet.asTypeName
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-
+import kotlin.reflect.KClass
+import kotlin.reflect.full.primaryConstructor
 
 class FaktoryGeneratorTest {
     @Test
     fun `it generates a data class with all properties and invoke method`() {
+        val model = modelOf<com.example.User>()
 
-        val model = Model(
-            name = "User",
-            packageName = "com.example",
-            attributes = listOf(
-                Attribute("name", String::class.asTypeName()),
-                Attribute("age", Int::class.asTypeName().copy(nullable = true)),
-            ),
-            clazz = bestGuess("com.example.User")
-        )
+        val result = FaktoryGenerator().generate(model)
 
-        val spec = FaktoryGenerator().generate(model)
-
-        assertThat(spec.name).isEqualTo("UserFaktory")
-        assertThat(spec.packageName).isEqualTo("com.example")
-        assertThat(spec.toString()).isEqualToIgnoringWhitespace(
+        assertThat(result.name).isEqualTo("UserFaktory")
+        assertThat(result.packageName).isEqualTo("com.example")
+        assertThat(result.toString()).isEqualToIgnoringWhitespace(
             """
             package com.example
             
@@ -43,6 +34,15 @@ class FaktoryGeneratorTest {
             }
             """.trimIndent()
         )
-
     }
+}
+
+inline fun <reified T> modelOf(): Model {
+    val clazz = T::class as KClass<*>
+    return Model(
+        type = clazz.asTypeName(),
+        attributes = clazz.primaryConstructor!!.parameters.map {
+            Attribute(it.name!!, it.type.asTypeName())
+        }
+    )
 }
