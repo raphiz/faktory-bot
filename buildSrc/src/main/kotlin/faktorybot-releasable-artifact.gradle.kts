@@ -17,7 +17,7 @@ publishing {
             from(components["java"])
             pom {
                 name.set("${project.group}:${project.name}")
-                description.set(project.description)
+                description.set("Generate factories to cleanly create and maintain test data")
                 url.set("https://www.github.com/raphiz/faktory-bot")
 
                 scm {
