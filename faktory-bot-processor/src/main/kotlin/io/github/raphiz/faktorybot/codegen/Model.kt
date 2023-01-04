@@ -1,4 +1,4 @@
-package io.github.raphiz.faktorybot
+package io.github.raphiz.faktorybot.codegen
 
 import com.squareup.kotlinpoet.ClassName
 

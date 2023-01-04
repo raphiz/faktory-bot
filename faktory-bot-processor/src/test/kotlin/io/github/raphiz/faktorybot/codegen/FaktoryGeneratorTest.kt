@@ -1,5 +1,6 @@
-package io.github.raphiz.faktorybot
+package io.github.raphiz.faktorybot.codegen
 
+import com.example.User
 import com.squareup.kotlinpoet.asTypeName
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -9,7 +10,7 @@ import kotlin.reflect.full.primaryConstructor
 class FaktoryGeneratorTest {
     @Test
     fun `it generates a data class with all properties and invoke method`() {
-        val model = modelOf<com.example.User>()
+        val model = modelOf<User>()
 
         val result = FaktoryGenerator().generate(model)
 
