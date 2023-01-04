@@ -1,5 +1,5 @@
 package io.github.raphiz.faktorybot
 
-import kotlin.reflect.KClass
+import com.squareup.kotlinpoet.TypeName
 
-data class Attribute(val name: String, val type: KClass<*>) 
+data class Attribute(val name: String, val type: TypeName) 
