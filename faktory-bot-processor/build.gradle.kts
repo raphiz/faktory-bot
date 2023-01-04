@@ -1,6 +1,6 @@
 plugins {
-    kotlin("jvm") version "1.7.10"
-    id("com.palantir.git-version") version "0.15.0"
+    kotlin("jvm")
+    id("com.palantir.git-version")
 }
 
 group = "io.github.raphiz"
