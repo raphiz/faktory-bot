@@ -14,5 +14,5 @@ gradleEnterprise {
 
 rootProject.name = "faktory-bot"
 
-include("faktory-bot")
+include("faktory-bot-processor")
 include("example-app")
