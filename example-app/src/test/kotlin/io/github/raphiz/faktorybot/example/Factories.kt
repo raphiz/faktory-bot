@@ -10,8 +10,9 @@ object Addresses {
 
 }
 
-object Users {
+class UserFactory(userRepository: UserRepository) {
     val validUser = UserFaktory(
+        faktoryInsertFn = userRepository::save,
         id = { UUID.randomUUID() },
         name = { "Peter" }
     )

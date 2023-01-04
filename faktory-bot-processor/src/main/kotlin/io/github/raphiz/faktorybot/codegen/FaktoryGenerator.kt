@@ -132,7 +132,7 @@ class FaktoryGenerator(
         model.attributes.forEach {
             add("%N=%N,", it.name, it.name)
         }
-        add(")", model.type)
+        add(")\n", model.type)
         return this
     }
 

@@ -39,7 +39,7 @@ class FaktoryBotProcessorTest {
         assertThat(compilation.exitCode).isEqualTo(KotlinCompilation.ExitCode.OK)
 
         assertThat(compilation.messages).contains(
-            "Creating Faktory for User: UserFaktory"
+            "Creating Faktory for com.example.User"
         )
 
         assertDoesNotThrow {
