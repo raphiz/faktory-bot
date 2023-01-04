@@ -12,8 +12,6 @@ repositories {
 }
 
 dependencies {
-    implementation(kotlin("stdlib"))
-
     implementation("com.squareup:kotlinpoet:1.12.0")
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.0")
