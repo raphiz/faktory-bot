@@ -12,7 +12,7 @@ class FaktoryGeneratorTest {
     fun `it generates a data class with all properties and methods`() {
         val model = modelOf<User>()
 
-        val result = FaktoryGenerator().generate(model)
+        val result = FaktoryGenerator(model).fileSpec()
 
         assertThat(result.name).isEqualTo("UserFaktory")
         assertThat(result.packageName).isEqualTo("com.example")
@@ -46,7 +46,7 @@ class FaktoryGeneratorTest {
     fun `it generates an insert method on the faktory when FaktoryInsert is supplied`() {
         val model = modelOf<User>()
 
-        val result = FaktoryGenerator(withInsert = true).generate(model)
+        val result = FaktoryGenerator(model, withInsert = true).fileSpec()
 
         assertThat(result.toString()).containsIgnoringWhitespaces(
             """

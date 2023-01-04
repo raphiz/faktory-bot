@@ -4,137 +4,140 @@ import com.squareup.kotlinpoet.*
 
 const val faktoryInsertFn: String = "faktoryInsertFn"
 
-class FaktoryGenerator(val withInsert: Boolean = false) {
-    fun generate(model: Model): FileSpec {
-        return FileSpec.builder(
-            packageName = model.type.packageName,
-            fileName = model.faktoryName
-        ).addType(model.toTypeSpec())
-            .build()
+class FaktoryGenerator(
+    private val model: Model,
+    private val withInsert: Boolean = false
+) {
+    private val faktoryClassName = "${model.type.simpleName}Faktory"
+    private val packageName = model.type.packageName
+    private val faktoryInsertFnType = LambdaTypeName.get(
+        parameters = listOf(
+            ParameterSpec.unnamed(model.type)
+        ), returnType = model.type
+    )
+
+    fun fileSpec(): FileSpec = FileSpec.builder(
+        packageName = packageName,
+        fileName = faktoryClassName
+    )
+        .addType(faktoryType())
+        .build()
+
+    private fun faktoryType(): TypeSpec {
+        val builder = TypeSpec
+            .classBuilder(ClassName(packageName, faktoryClassName))
+            .addModifiers(KModifier.DATA)
+            .primaryConstructor(constructor())
+            .addProperties(properties())
+            .addFunction(invokeFunction())
+            .addFunction(crateFunction())
+
+        if (withInsert) {
+            builder.addFunction(insertFunction())
+        }
+
+        return builder.build()
     }
 
-    private fun Model.toTypeSpec(): TypeSpec {
-        return TypeSpec.classBuilder(
-            className = ClassName(type.packageName, faktoryName),
-        ).addModifiers(KModifier.DATA)
-            .primaryConstructor(toConstructorFunSpec())
-            .addProperties(toPropertySpecs())
-            .addFunction(invokeFunSpec())
-            .addFunction(createFunSpec())
-            .also {
-                if (withInsert) it.addFunction(insertFunSpec())
-            }
-            .build()
-    }
 
-    private fun Model.toConstructorFunSpec(): FunSpec {
-        return FunSpec.constructorBuilder()
-            .also {
-                if (withInsert)
-                    it.addParameter(
-                        ParameterSpec.builder(
-                            faktoryInsertFn,
-                            LambdaTypeName.get(
-                                parameters = listOf(
-                                    ParameterSpec.unnamed(type)
-                                ), returnType = type
-                            )
-                        )
-                            .build()
-                    )
-            }
-            .addParameters(
-                attributes.map {
-                    ParameterSpec.builder(it.name, LambdaTypeName.get(returnType = it.type))
-                        .apply {
-                            if (it.type.isNullable) defaultValue("{ null }")
-                        }
-                        .build()
-                }
+    private fun constructor(): FunSpec {
+        val builder = FunSpec.constructorBuilder()
+
+        if (withInsert) {
+            val insertFunctionParameter = ParameterSpec.builder(
+                faktoryInsertFn,
+                faktoryInsertFnType
             ).build()
+            builder.addParameter(insertFunctionParameter)
+        }
+
+        model.attributes.forEach {
+            val parameter = ParameterSpec.builder(it.name, it.type.toSupplierType())
+            if (it.type.isNullable) parameter.defaultValue("{ null }")
+            builder.addParameter(parameter.build())
+        }
+
+        return builder.build()
     }
 
-    private fun Model.toPropertySpecs(): List<PropertySpec> {
-        val propertySpecs = attributes.map {
-            PropertySpec.builder(it.name, LambdaTypeName.get(returnType = it.type))
+    private fun properties(): List<PropertySpec> {
+        val properties = model.attributes.map {
+            PropertySpec.builder(it.name, it.type.toSupplierType())
                 .initializer(it.name)
                 .build()
         }
         if (withInsert) {
-            val faktoryInsertFnPropertySpec = PropertySpec.builder(
+            val faktoryInsertFnProperty = PropertySpec.builder(
                 faktoryInsertFn,
-                LambdaTypeName.get(
-                    parameters = listOf(
-                        ParameterSpec.unnamed(type)
-                    ), returnType = type
-                )
-            )
-                .initializer(faktoryInsertFn)
+                faktoryInsertFnType,
+            ).initializer(faktoryInsertFn)
                 .addModifiers(KModifier.PRIVATE)
                 .build()
-            return propertySpecs + listOf(faktoryInsertFnPropertySpec)
+            return properties + faktoryInsertFnProperty
         }
-        return propertySpecs
+        return properties
 
     }
 
-    private fun Model.invokeFunSpec(): FunSpec {
-        return builderFunSpec("invoke")
+    private fun invokeFunction(): FunSpec {
+        return functionWithBuilderParameters("invoke")
             .addModifiers(KModifier.OPERATOR)
             .addCode(
                 CodeBlock.builder()
                     .add("return ")
-                    .createModel(this)
+                    .createModelInstance()
                     .build()
             )
             .build()
     }
 
-    private fun Model.createFunSpec(): FunSpec {
-        return builderFunSpec("create")
+    private fun crateFunction(): FunSpec {
+        return functionWithBuilderParameters("create")
             .addCode(
                 CodeBlock.builder()
                     .add("return ")
-                    .createModel(this)
+                    .createModelInstance()
                     .build()
             )
             .build()
     }
 
-    private fun Model.insertFunSpec(): FunSpec {
-        val variableName = this.type.simpleName.lowercase()
-        return builderFunSpec("insert")
+    private fun insertFunction(): FunSpec {
+        val variableName = model.type.simpleName.replaceFirstChar { it.lowercase() }
+        return functionWithBuilderParameters("insert")
             .addCode(
                 CodeBlock.builder()
                     .add("val %N = ", variableName)
-                    .createModel(this)
-                    .add("$faktoryInsertFn(%N)", variableName)
-                    .add("\nreturn %N", variableName)
+                    .createModelInstance()
+                    .addStatement("$faktoryInsertFn(%N)", variableName)
+                    .addStatement("return %N", variableName)
                     .build()
             )
             .build()
     }
 
-    private fun Model.builderFunSpec(name: String) = FunSpec.builder(name)
+    private fun functionWithBuilderParameters(name: String) = FunSpec.builder(name)
         .addParameters(
-            attributes.map {
+            model.attributes.map {
                 ParameterSpec.builder(
                     it.name, it.type
                 ).defaultValue("this.%N()", it.name)
                     .build()
             }
         )
-        .returns(this.type)
-}
+        .returns(model.type)
 
-private fun CodeBlock.Builder.createModel(model: Model): CodeBlock.Builder {
-    add("%T(", model.type)
-    model.attributes.forEach {
-        add("%N=%N,", it.name, it.name)
+    private fun CodeBlock.Builder.createModelInstance(): CodeBlock.Builder {
+        add("%T(", model.type)
+        model.attributes.forEach {
+            add("%N=%N,", it.name, it.name)
+        }
+        add(")", model.type)
+        return this
     }
-    add(")", model.type)
-    return this
+
+    private fun TypeName.toSupplierType(): TypeName = LambdaTypeName.get(returnType = this)
 }
 
-private val Model.faktoryName: String
-    get() = "${type.simpleName}Faktory"
+
+

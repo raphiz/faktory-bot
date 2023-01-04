@@ -19,7 +19,6 @@ import io.github.raphiz.faktorybot.codegen.Model
 class FaktoryBotProcessor(
     private val logger: KSPLogger,
     private val codeGenerator: CodeGenerator,
-    private val faktoryGenerator: FaktoryGenerator,
 ) : SymbolProcessor {
     override fun process(resolver: Resolver): List<KSAnnotated> {
         val symbols = resolver.getSymbolsWithAnnotation(Faktory::class.java.name)
@@ -40,7 +39,7 @@ class FaktoryBotProcessor(
     inner class FaktoryAnnotatedProcessorVisitor : KSVisitorVoid() {
         override fun visitClassDeclaration(classDeclaration: KSClassDeclaration, data: Unit) {
             val model = classDeclaration.toModel()
-            faktoryGenerator.generate(model).writeTo(
+            FaktoryGenerator(model).fileSpec().writeTo(
                 codeGenerator = codeGenerator,
                 aggregating = false
             )
