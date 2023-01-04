@@ -1,19 +1,5 @@
 plugins {
-    kotlin("jvm")
-    id("com.palantir.git-version")
-}
-
-group = "io.github.raphiz"
-
-version = run {
-    val gitVersion: groovy.lang.Closure<String> by extra
-    val version = gitVersion()
-    if (version.startsWith("v")) version.substring(1)
-    else version
-}
-
-repositories {
-    mavenCentral()
+    `faktorybot-module`
 }
 
 dependencies {
@@ -27,8 +13,4 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.0")
     testImplementation("org.assertj:assertj-core:3.23.1")
     testImplementation(kotlin("reflect"))
-}
-
-tasks.test {
-    useJUnitPlatform()
 }

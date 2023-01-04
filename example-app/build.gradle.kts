@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm")
-    id("com.google.devtools.ksp")
+    id("com.google.devtools.ksp") version "1.7.10-1.0.6"
 }
 
 group = "io.github.raphiz"
