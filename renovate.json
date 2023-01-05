@@ -3,5 +3,17 @@
   "extends": [
     "config:base"
   ],
-  "dependencyDashboard": false
+  "dependencyDashboard": false,
+  "packageRules": [
+    {
+      "groupName": "Kotlin & KSP",
+      "groupSlug": "kotlin",
+      "matchPackagePrefixes": [
+        "com.google.devtools.ksp",
+      ],
+      "matchPackagePatterns": [
+        "org.jetbrains.kotlin.*"
+      ]
+    }
+  ]
 }
