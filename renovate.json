@@ -4,6 +4,7 @@
     "config:base"
   ],
   "dependencyDashboard": false,
+  "gradle": {"fileMatch": ["README.md"]},
   "packageRules": [
     {
       "groupName": "Kotlin & KSP",
