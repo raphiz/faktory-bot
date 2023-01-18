@@ -10,7 +10,7 @@
       "groupName": "Kotlin & KSP",
       "groupSlug": "kotlin",
       "matchPackagePrefixes": [
-        "com.google.devtools.ksp",
+        "com.google.devtools.ksp"
       ],
       "matchPackagePatterns": [
         "org.jetbrains.kotlin.*"
