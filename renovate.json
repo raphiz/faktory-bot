@@ -1,20 +1,19 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:base"
-  ],
+  "extends": ["config:base"],
   "dependencyDashboard": false,
-  "gradle": {"fileMatch": ["README.md"]},
+  "gradle": { "fileMatch": ["README.md"] },
   "packageRules": [
     {
       "groupName": "Kotlin & KSP",
       "groupSlug": "kotlin",
-      "matchPackagePrefixes": [
-        "com.google.devtools.ksp"
-      ],
-      "matchPackagePatterns": [
-        "org.jetbrains.kotlin.*"
-      ]
+      "matchPackagePrefixes": ["com.google.devtools.ksp"],
+      "matchPackagePatterns": ["org.jetbrains.kotlin.*"]
+    },
+    {
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchCurrentVersion": "!/^0/",
+      "automerge": true
     }
   ]
 }
