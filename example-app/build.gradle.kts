@@ -13,7 +13,7 @@ dependencies {
     compileOnly(project(":faktory-bot-annotations"))
     ksp(project(":faktory-bot-processor"))
 
-    testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.9.3")
     testImplementation("org.assertj:assertj-core:3.24.2")
 }
 
