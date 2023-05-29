@@ -7,7 +7,7 @@ description = "Generate factories to cleanly create and maintain test data"
 
 dependencies {
     implementation("com.squareup:kotlinpoet:1.14.1")
-    implementation("com.squareup:kotlinpoet-ksp:1.14.0")
+    implementation("com.squareup:kotlinpoet-ksp:1.14.1")
     implementation(project(":faktory-bot-annotations"))
 
     implementation("com.google.devtools.ksp:symbol-processing-api:1.8.21-1.0.11")
