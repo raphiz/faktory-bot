@@ -10,7 +10,7 @@ dependencies {
     implementation("com.squareup:kotlinpoet-ksp:1.14.2")
     implementation(project(":faktory-bot-annotations"))
 
-    implementation("com.google.devtools.ksp:symbol-processing-api:1.9.0-1.0.11")
+    implementation("com.google.devtools.ksp:symbol-processing-api:1.9.0-1.0.12")
     testImplementation("com.github.tschuchortdev:kotlin-compile-testing-ksp:1.5.0")
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.9.3")
