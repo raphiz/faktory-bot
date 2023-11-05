@@ -13,7 +13,7 @@ dependencies {
     implementation("com.google.devtools.ksp:symbol-processing-api:1.9.20-1.0.14")
     testImplementation("com.github.tschuchortdev:kotlin-compile-testing-ksp:1.5.0")
 
-    testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.1")
     testImplementation("org.assertj:assertj-core:3.24.2")
     testImplementation(kotlin("reflect"))
 }
