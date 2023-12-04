@@ -6,7 +6,7 @@ plugins {
 description = "Generate factories to cleanly create and maintain test data"
 
 dependencies {
-    implementation("com.squareup:kotlinpoet:1.15.2")
+    implementation("com.squareup:kotlinpoet:1.15.3")
     implementation("com.squareup:kotlinpoet-ksp:1.15.2")
     implementation(project(":faktory-bot-annotations"))
 
