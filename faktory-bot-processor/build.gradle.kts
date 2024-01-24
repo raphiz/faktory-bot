@@ -14,6 +14,6 @@ dependencies {
     testImplementation("com.github.tschuchortdev:kotlin-compile-testing-ksp:1.5.0")
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.1")
-    testImplementation("org.assertj:assertj-core:3.25.1")
+    testImplementation("org.assertj:assertj-core:3.25.2")
     testImplementation(kotlin("reflect"))
 }
