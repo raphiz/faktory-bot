@@ -14,7 +14,7 @@ dependencies {
     ksp(project(":faktory-bot-processor"))
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
-    testImplementation("org.assertj:assertj-core:3.25.2")
+    testImplementation("org.assertj:assertj-core:3.25.3")
 }
 
 kotlin {
