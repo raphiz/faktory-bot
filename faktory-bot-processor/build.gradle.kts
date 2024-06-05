@@ -11,7 +11,7 @@ dependencies {
     implementation(project(":faktory-bot-annotations"))
 
     implementation("com.google.devtools.ksp:symbol-processing-api:1.9.24-1.0.20")
-    testImplementation("com.github.tschuchortdev:kotlin-compile-testing-ksp:1.5.0")
+    testImplementation("com.github.tschuchortdev:kotlin-compile-testing-ksp:1.6.0")
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.2")
     testImplementation("org.assertj:assertj-core:3.26.0")
